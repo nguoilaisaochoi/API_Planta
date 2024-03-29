@@ -8,9 +8,9 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
     let result = await admin_control.login(email, password);
     if (result) {
-      res.json({ messenger: true });
+      res.json({ status: true });
     } else {
-      res.json({ messenger: false });
+      res.json({ status: false });
     }
   } catch (error) {
     console.log(error);
@@ -23,7 +23,7 @@ router.post("/reg", async (req, res) => {
     let result = await admin_control.reg(email, password);
     if (result) {
       res.json({
-        messenger: "Đăng kí thành công",
+        status:true,
         data: result,
       });
     } else {

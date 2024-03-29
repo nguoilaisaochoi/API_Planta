@@ -8,9 +8,9 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
     let result = await users_control.login(email, password);
     if (result) {
-      res.json({ messenger: true });
+      res.json({ status: true, data: result });
     } else {
-      res.json({ messenger: false });
+      res.json({ status: false });
     }
   } catch (error) {
     console.log(error);
@@ -21,13 +21,15 @@ router.post("/reg", async (req, res) => {
   try {
     const { name, email, phone, password } = req.body;
     let result = await users_control.reg(name, email, phone, password);
-    if (result) {
+    console.log(result);
+    if (result !== 400) {
       res.json({
-        messenger: true,
-        data: result,
+        status: true,
       });
+    } else if (result == 400) {
+      res.json({ status: false, data: result });
     } else {
-      res.json({ status: 400, messenger: false });
+      res.json({ status: false });
     }
   } catch (error) {
     console.log(error);

@@ -16,7 +16,10 @@ const reg = async (name, email, phone, password) => {
   try {
     let result;
     const checkemail = await Usermodel.findOne({ email: email });
-    if (!checkemail) {
+    console.log(checkemail);
+    if (checkemail) {
+      result = 400;
+    } else {
       const newUser = new Usermodel({ name, email, phone, password });
       result = await newUser.save();
     }
