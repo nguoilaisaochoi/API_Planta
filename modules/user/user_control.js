@@ -1,10 +1,15 @@
 const mongoose = require("mongoose");
-
+const bcryptjs = require("bcryptjs");
 Usermodel = require("../user/user");
+const jwt = require("jsonwebtoken");
 
-const login = async (email, password) => {
+
+const loginold = async (email, password) => {
   try {
-    const check = await Usermodel.findOne({ email, password });
+    const salt = bcryptjs.genSaltSync(10);
+    const hashPassword = bcryptjs.hashSync(password, salt);
+    console.log(hashPassword);
+    const check = await Usermodel.findOne({ email, password: hashPassword });
     console.log(check);
     return check;
   } catch (error) {
@@ -12,15 +17,24 @@ const login = async (email, password) => {
   }
 };
 
+const login = async (email, password) => {
+  const user = await Usermodel.findOne({ email });
+  if (user && bcryptjs.compareSync(password, user.password)) {
+    return user;
+  }
+};
+
 const reg = async (name, email, phone, password) => {
   try {
     let result;
+    const salt = bcryptjs.genSaltSync(10);
+    const hashPassword = bcryptjs.hashSync(password, salt);
     const checkemail = await Usermodel.findOne({ email: email });
     console.log(checkemail);
     if (checkemail) {
       result = 400;
     } else {
-      const newUser = new Usermodel({ name, email, phone, password });
+      const newUser = new Usermodel({ name, email, phone, password: hashPassword });
       result = await newUser.save();
     }
     return result;
