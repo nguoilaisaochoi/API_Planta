@@ -11,9 +11,9 @@ const getAll = async () => {
   }
 };
 
-const getPresent = async () => {
+const getParent = async () => {
   try {
-    const categories = await modelcategory.find({ getPresentId: null });
+    const categories = await modelcategory.find({ parentId: null });
     return categories;
   } catch (error) {
     console.log(error);
@@ -58,4 +58,4 @@ const del = async (catchId) => {
   return result;
 };
 
-module.exports = { getAll, getPresent, getSub, add, update, del };
+module.exports = { getAll, getParent, getSub, add, update, del };

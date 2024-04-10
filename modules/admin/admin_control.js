@@ -5,7 +5,6 @@ AdminModel = require("../admin/admin");
 const login = async (email, password) => {
   try {
     const check = await AdminModel.findOne({ email, password });
-    console.log(check);
     return check;
   } catch (error) {
     console.log(error);

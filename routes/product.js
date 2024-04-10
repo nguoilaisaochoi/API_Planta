@@ -5,8 +5,9 @@ const upload = require("../config/upload");
 const product_control = require("../modules/product/product_control");
 router.get("/list", async (req, res) => {
   let result;
+  const { _id } = req.query;
   try {
-    result = await product_control.list();
+    result = await product_control.list(_id);
     if (result) {
       res.json(result);
     }
@@ -14,12 +15,11 @@ router.get("/list", async (req, res) => {
     console.log(error);
   }
 });
-router.get("/listbyid", async (req, res) => {
+
+router.get("/find", async (req, res) => {
   try {
-    const { _id } = req.query;
-    console.log(_id);
-    let result;
-    result = await product_control.listid(_id);
+    const { name } = req.query;
+    let result = await product_control.findByName(name);
     if (result) {
       res.json(result);
     }
@@ -30,10 +30,10 @@ router.get("/listbyid", async (req, res) => {
 
 router.post("/add", async (req, res) => {
   try {
-    const data = req.body;
-    let result = await product_control.add(data);
+    const { name, price, size, category, image, origin, quantity } = req.body;
+    let result = await product_control.add(name, price, size, category, image, origin, quantity);
     if (result) {
-      res.json(result);
+      res.json({ message: "Thêm thành công" });
     }
   } catch (error) {
     console.log(error);
@@ -41,10 +41,21 @@ router.post("/add", async (req, res) => {
 });
 
 router.post("/update", async (req, res) => {
-  const data = req.body;
-  let result = await product_control.update(data);
+  const { id, name, price, size, category, image, origin, quantity } = req.body;
+  let result = await product_control.update(
+    id,
+    name,
+    price,
+    size,
+    category,
+    image,
+    origin,
+    quantity
+  );
   if (result) {
-    res.json(result);
+    res.json({ message: "Cập nhật thành công" });
+  } else {
+    res.json({ message: "Cập nhật thất bại" });
   }
 });
 router.post("/del", async (req, res) => {
@@ -61,4 +72,5 @@ router.post("/del", async (req, res) => {
     console.log(error);
   }
 });
+
 module.exports = router;

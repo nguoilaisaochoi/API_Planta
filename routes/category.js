@@ -3,14 +3,19 @@ var router = express.Router();
 const controller_category = require("../modules/categories/category_control");
 
 router.post("/add", async (req, res, next) => {
-  const { name } = req.body;
+  const { name, parentId } = req.body;
+  console.log(name)
+  console.log(parentId)
   let result;
   try {
-    result = await controller_category.add(name, null);
-
-    return res.json({ data: result });
+    if (!parentId) {
+      result = await controller_category.add(name, null);
+    } else {
+      result = await controller_category.add(name, parentId);
+    }
+    return res.json({ message: "Thêm thành công" });
   } catch (error) {
-    return res.json({ data: error.message });
+    return res.json({ message: "Thêm thất bại" });
   }
 });
 
@@ -46,6 +51,14 @@ router.post("/del", async (req, res) => {
     }
   } catch (error) {
     return res.status(500).json({ status: false, data: error.message });
+  }
+});
+router.get("/getparent", async function (req, res) {
+  try {
+    const categories = await controller_category.getParent();
+    res.json(categories);
+  } catch (error) {
+    console.log(error);
   }
 });
 module.exports = router;

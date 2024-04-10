@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const bill = require("./bill");
+const Product = require("../product/product");
 
 const getAll = async () => {
   try {
@@ -34,4 +35,4 @@ const del = async (id) => {
   }
 };
 
-module.exports = { getAll, add, del };
+module.exports = { getAll, add, del};

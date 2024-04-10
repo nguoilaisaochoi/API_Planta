@@ -8,9 +8,9 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
     let result = await admin_control.login(email, password);
     if (result) {
-      res.json({ status: true });
+      res.json({ data: result });
     } else {
-      res.json({ status: false });
+      res.json({ data: null });
     }
   } catch (error) {
     console.log(error);

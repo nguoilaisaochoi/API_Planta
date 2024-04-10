@@ -2,20 +2,7 @@ const mongoose = require("mongoose");
 const bcryptjs = require("bcryptjs");
 Usermodel = require("../user/user");
 const jwt = require("jsonwebtoken");
-
-
-const loginold = async (email, password) => {
-  try {
-    const salt = bcryptjs.genSaltSync(10);
-    const hashPassword = bcryptjs.hashSync(password, salt);
-    console.log(hashPassword);
-    const check = await Usermodel.findOne({ email, password: hashPassword });
-    console.log(check);
-    return check;
-  } catch (error) {
-    console.log(error);
-  }
-};
+const user = require("../user/user");
 
 const login = async (email, password) => {
   const user = await Usermodel.findOne({ email });
@@ -34,7 +21,13 @@ const reg = async (name, email, phone, password) => {
     if (checkemail) {
       result = 400;
     } else {
-      const newUser = new Usermodel({ name, email, phone, password: hashPassword });
+      const newUser = new Usermodel({
+        name,
+        email,
+        phone,
+        password: hashPassword,
+        address: "trống",
+      });
       result = await newUser.save();
     }
     return result;
@@ -42,8 +35,13 @@ const reg = async (name, email, phone, password) => {
     console.log(error);
   }
 };
-const list = async () => {
-  const user = await Usermodel.find({});
+const list = async (_id) => {
+  let user;
+  if (_id) {
+    user = await Usermodel.findById(_id);
+  } else {
+    user = await Usermodel.find({});
+  }
   return user;
 };
 const changepass = async (email, passold, passnew) => {
@@ -60,12 +58,28 @@ const changepass = async (email, passold, passnew) => {
   }
 };
 
-const del = async (email) => {
+const update = async (name, email, address, phone) => {
   try {
-    const user = await Usermodel.deleteOne({ email });
+    let result;
+    const check = await user.findOne({ email });
+    if (check) {
+      check.name = name ?? check.name;
+      check.phone = phone ?? check.phone;
+      check.address = address ?? check.address;
+      result = await check.save();
+    }
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const del = async (id) => {
+  try {
+    const user = await Usermodel.deleteOne({ _id: id });
     return user;
   } catch (error) {
     console.log(error);
   }
 };
-module.exports = { login, reg, list, changepass, del };
+module.exports = { login, reg, list, changepass, del, update };

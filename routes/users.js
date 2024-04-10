@@ -8,9 +8,9 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
     let result = await users_control.login(email, password);
     if (result) {
-      res.json({ status: true, data: result });
+      res.json({ messenger: "Đăng nhập thành công", data: result });
     } else {
-      res.json({ status: false });
+      res.json({ messenger: "Thông tin đăng nhập không đúng", data: null });
     }
   } catch (error) {
     console.log(error);
@@ -23,13 +23,9 @@ router.post("/reg", async (req, res) => {
     let result = await users_control.reg(name, email, phone, password);
     console.log(result);
     if (result !== 400) {
-      res.json({
-        status: true,
-      });
+      res.json({ data: result });
     } else if (result == 400) {
-      res.json({ status: false, data: result });
-    } else {
-      res.json({ status: false });
+      res.json({ data: null, messenger: "Email tồn tại" });
     }
   } catch (error) {
     console.log(error);
@@ -37,8 +33,9 @@ router.post("/reg", async (req, res) => {
 });
 //lấy danh sách
 router.get("/list", async (req, res) => {
+  const { _id } = req.query;
   try {
-    let result = await users_control.list();
+    let result = await users_control.list(_id);
     if (result) {
       res.json({ data: result });
     }
@@ -52,12 +49,22 @@ router.post("/changepass", async (req, res) => {
     const { email, passold, passnew } = req.body;
     const result = await users_control.changepass(email, passold, passnew);
     if (result) {
-      res.json({
-        messenger: "Đổi mk thành công",
-        data: result,
-      });
+      res.json("Đổi mk thành công");
     } else {
       res.json("Đổi mk thất bại");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+router.post("/update", async (req, res) => {
+  try {
+    const { name, email, address, phone } = req.body;
+    const result = await users_control.update(name, email, address, phone);
+    if (result) {
+      res.json({ data: result });
+    } else {
+      res.json({ data: null });
     }
   } catch (error) {
     console.log(error);
@@ -66,15 +73,18 @@ router.post("/changepass", async (req, res) => {
 //xoá
 router.post("/del", async (req, res) => {
   try {
-    const { email } = req.body;
-    const result = await users_control.del(email);
+    const { id } = req.body;
+    const result = await users_control.del(id);
     if (result.deletedCount >= 1) {
       res.json({
-        messenger: "xoá thành công",
+        message: "xoá thành công",
         data: result,
       });
     } else {
-      res.json("Xoá thất bại");
+      res.json({
+        message: "xoá thành công",
+        data: result,
+      });
     }
   } catch (error) {
     console.log(error);

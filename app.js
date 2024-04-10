@@ -10,6 +10,7 @@ var categoryRouter = require("./routes/category");
 var productRouter = require("./routes/product");
 var billRouter = require("./routes/bill");
 var adminRouter = require("./routes/admin");
+var cardRouter =require('./routes/cart')
 //connect mongodb
 const database = require("./config/db");
 
@@ -31,7 +32,7 @@ app.use("/category", categoryRouter);
 app.use("/product", productRouter);
 app.use("/bill", billRouter);
 app.use("/admin", adminRouter);
-
+app.use("/cart",cardRouter)
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
