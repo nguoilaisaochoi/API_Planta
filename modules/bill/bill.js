@@ -7,7 +7,7 @@ const billschema = new Schema({
   userId: { type: ObjectId, ref: "user" },
   products: [
     {
-      productsId: { type: String, require: true },
+      productsId: { type: ObjectId, ref: "product", required: true },
       productname: { type: String, require: true },
       productimage: { type: Array },
       productcategory: { type: String, require: true },
