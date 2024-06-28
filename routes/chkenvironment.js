@@ -1,8 +1,7 @@
 var express = require("express");
 var router = express.Router();
 
-
-router.post("/chk", async (req, res) => {
-  res.send("server starting");
+router.get("/chk", async (req, res) => {
+  return res.json("result");
 });
 module.exports = router;
