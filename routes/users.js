@@ -2,6 +2,15 @@ var express = require("express");
 var router = express.Router();
 
 const users_control = require("../modules/user/user_control");
+
+//check render
+router.get("/connect", async (req, res) => {
+  try {
+    res.json({ note: "Connected" });
+  } catch (error) {
+    console.log(error);
+  }
+}),
 //đăng nhập
 router.post("/login", async (req, res) => {
   try {

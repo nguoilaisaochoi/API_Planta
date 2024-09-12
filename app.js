@@ -3,6 +3,7 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
+var cron = require("node-cron");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
@@ -38,6 +39,19 @@ app.use("", chkenvironment);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
+});
+
+const fetchAPI = async () => {
+  try {
+    await axios.get("https://api-planta-sa.onrender.com/user/connect");
+  } catch (error) {
+    console.error("Error fetching API:", error.message);
+  }
+};
+
+//call sever
+cron.schedule("*/2 * * * *", () => {
+  fetchAPI();
 });
 
 // error handler
